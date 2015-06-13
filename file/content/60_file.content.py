@@ -28,6 +28,7 @@ for fname in file_list:
     file_dict[fname]['fdiff'] = '/tmp/.falcon' + '.'.join(fname.split('/')) + '.diff'
 
 timestamp = str(int(time.time()))
+result = []
 #######################################################
 
 #####该部分定义push的接口，metric名称，tags等信息######
@@ -40,7 +41,7 @@ counterType = "GUAGE"
 
 def push_data(fname, value):
     ts = int(timestamp)
-    payload = [{
+    payload = {
         "endpoint": endpoint,
 	"metric": metric,
 	"timestamp": ts,
@@ -48,8 +49,8 @@ def push_data(fname, value):
 	"value": value,
 	"counterType": counterType,
 	"tags": 'filename=' + fname
-    }]
-    print json.dumps(payload)
+    }
+    result.append(payload)
     #r = requests.post(falcon_api, data=json.dumps(payload))
     #print r.text
 
@@ -83,3 +84,4 @@ def main():
    
 if __name__ == "__main__":
     main()
+    print json.dumps(result)
