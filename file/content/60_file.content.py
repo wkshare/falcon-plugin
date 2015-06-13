@@ -36,7 +36,7 @@ falcon_api = 'http://127.0.0.1:2015/v1/push'
 endpoint = socket.gethostname()
 metric = 'file.content'
 step = 60
-counterType = "GUAGE"
+counterType = "GAUGE"
 #######################################################
 
 def push_data(fname, value):
