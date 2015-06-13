@@ -27,7 +27,7 @@ for fname in file_list:
     file_dict[fname]['ftmp'] = '/tmp/.falcon' + '.'.join(fname.split('/')) + '.tmp'
     file_dict[fname]['fdiff'] = '/tmp/.falcon' + '.'.join(fname.split('/')) + '.diff'
 
-timestamp = str(time.time())
+timestamp = str(int(time.time()))
 #######################################################
 
 #####该部分定义push的接口，metric名称，tags等信息######
