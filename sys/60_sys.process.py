@@ -13,7 +13,8 @@ process_list = [
     "ntpd",
     "cron",
     "rsyslogd",
-    "mysqld"
+    "mysqld",
+    "supervisord"
 ]
 
 #####该部分定义push的接口，metric名称，tags等信息######
