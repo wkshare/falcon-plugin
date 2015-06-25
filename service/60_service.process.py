@@ -3,6 +3,7 @@
 # author: wangkai
 # date: 2015-06-24
 
+import re
 import json
 import time
 import socket
@@ -10,13 +11,11 @@ import psutil
 
 #需要检查的进程列表
 process_list = [
-    "ntpd",
-    "cron",
-    "rsyslogd",
-    "mysqld",
-    "supervisord",
-    "logsync-client"
+    "",
 ]
+
+#需要匹配检查服务进程名的正则
+process_reg = re.compile('^qbox[^.]*')
 
 #####该部分定义push的接口，metric名称，tags等信息######
 falcon_api = 'http://127.0.0.1:2015/v1/push'
@@ -26,9 +25,21 @@ process_result = []
 #######################################################
 
 def main():
+    #检查七牛服务进程
+    #输出结果
     for proc in psutil.process_iter():
-        if proc.name in process_list:
-            tags = 'process_name=%s' % proc.name
+        if (proc.name in process_list) or (process_reg.match(proc.name)):
+            pdir = proc.cmdline[0].split('/')
+            try:
+                if (pdir[1] == 'home') and (pdir[2] == 'qboxserver') and (pdir[4] == '_package'):
+                    proc_name = pdir[3]
+                else:
+                    proc_name = proc.name
+            except:
+                proc_name = proc.name
+            #print proc_name
+            #continue
+            tags = 'process_name=%s' % proc_name
             #进程的状态
             process_status = proc.status
             if process_status == psutil.STATUS_RUNNING:
