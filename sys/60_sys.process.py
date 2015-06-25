@@ -10,10 +10,10 @@ import psutil
 
 #需要检查的进程列表
 process_list = [
-    "sshd",
     "ntpd",
     "cron",
-    "rsyslogd"
+    "rsyslogd",
+    "mysqld"
 ]
 
 #####该部分定义push的接口，metric名称，tags等信息######
@@ -29,6 +29,28 @@ def main():
             tags = 'process_name=%s' % proc.name
             #进程的状态
             process_status = proc.status
+            if process_status == psutil.STATUS_RUNNING:
+                process_status = 0
+            elif process_status == psutil.STATUS_SLEEPING:
+                process_status = 1
+            elif process_status == psutil.STATUS_IDLE:
+                process_status = 2
+            elif process_status == psutil.STATUS_WAKING:
+                process_status = 3
+            elif process_status == psutil.STATUS_LOCKED:
+                process_status = 4
+            elif process_status == psutil.STATUS_TRACING_STOP:
+                process_status = 5
+            elif process_status == psutil.STATUS_STOPPED:
+                process_status = 6
+            elif process_status == psutil.STATUS_DISK_SLEEP:
+                process_status = -1
+            elif process_status == psutil.STATUS_DEAD:
+                process_status = -2
+            elif process_status == psutil.STATUS_ZOMBIE:
+                process_status = -3
+            else:
+                process_status = 1
             member = {
                 "metric": "process_status",
                 "endpoint": endpoint,
